@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   const { type, artist, song } = req.body || {};
   
   // 優先試行するGeminiモデルのリスト（2026年9月時点で提供中の正式モデルのみを使用）
-  const candidateModels = ['gemini-3.5-flash', 'gemini-3.6-flassh'];
+  const candidateModels = ['gemini-3.6-flash', 'gemini-3.5-flash'];
 
   try {
     let payload;
