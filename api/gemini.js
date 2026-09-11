@@ -12,8 +12,8 @@ export default async function handler(req, res) {
 
   const { type, artist, song } = req.body || {};
   
-  // 優先試行するGeminiモデルのリスト（gemini-3.5-flash, gemini-3-flash を最優先に設定）
-  const candidateModels = ['gemini-3.5-flash', 'gemini-3-flash', 'gemini-2.0-flash'];
+  // 優先試行するGeminiモデルのリスト（2026年9月時点で提供中の正式モデルのみを使用）
+  const candidateModels = ['gemini-3.5-flash', 'gemini-3.6-flassh'];
 
   try {
     let payload;
