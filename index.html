@@ -135,7 +135,7 @@
                 <!-- Neon Glow Background Light Orbs -->
                 <div class="absolute -top-20 -left-20 w-64 h-64 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="absolute -bottom-20 -right-20 w-72 h-72 bg-brand-red/20 rounded-full blur-3xl pointer-events-none"></div>
-                
+
                 <!-- Neon Vinyl Record Background Overlay -->
                 <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40 sm:opacity-35 select-none overflow-visible" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice">
                     <defs>
@@ -195,15 +195,6 @@
                             <rect x="-38" y="10" width="10" height="15" rx="2" fill="#E52E2E" transform="rotate(25 -32 15)"/>
                         </g>
                     </g>
-
-                    <g transform="translate(80, 200)" opacity="0.25">
-                        <g class="animate-vinyl-spin">
-                            <circle cx="0" cy="0" r="110" fill="none" stroke="url(#neonCyanGrad)" stroke-width="2" filter="url(#neonGlowEffect)"/>
-                            <circle cx="0" cy="0" r="85" stroke="url(#neonVinylGrad)" stroke-width="1" stroke-dasharray="10 15" fill="none"/>
-                            <circle cx="0" cy="0" r="60" stroke="rgba(255,255,255,0.2)" stroke-width="1" fill="none"/>
-                            <circle cx="0" cy="0" r="30" fill="#E52E2E" opacity="0.3"/>
-                        </g>
-                    </g>
                 </svg>
 
                 <div class="relative z-10 mb-4 flex items-center justify-between border-b border-gray-800 pb-2.5">
@@ -260,6 +251,17 @@
     <main class="flex-grow bg-brand-lightBg py-10 px-4 sm:px-6 lg:px-8">
         <div class="max-w-5xl mx-auto">
 
+            <!-- API Error Notification Banner -->
+            <div id="errorState" class="hidden mb-6 bg-red-50 border border-red-300 text-red-900 p-5 rounded-2xl shadow-sm">
+                <div class="flex items-start space-x-3">
+                    <i class="fa-solid fa-triangle-exclamation text-brand-red text-2xl flex-shrink-0 mt-0.5"></i>
+                    <div class="space-y-1">
+                        <h3 class="font-bold text-base text-brand-red" id="errorTitle">検索処理中にエラーが発生しました</h3>
+                        <p class="text-xs text-red-700 leading-relaxed" id="errorMessage">エラーの詳細情報を表示します。</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Default Welcome State -->
             <div id="welcomeState" class="text-center py-16 px-6 bg-white rounded-3xl border border-gray-200 shadow-sm space-y-4">
                 <div class="w-20 h-20 bg-red-50 text-brand-red rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner">
@@ -286,11 +288,12 @@
             <!-- Results View Area -->
             <div id="resultsArea" class="hidden space-y-8">
 
-                <!-- 1. YouTube Player Section -->
+                <!-- 1. Video Player Section (Vimeo Prioritized / YouTube Fallback) -->
                 <section class="bg-white rounded-2xl p-6 border border-gray-200 shadow-md">
                     <div class="flex items-center justify-between mb-4 border-b border-gray-100 pb-3">
                         <h2 class="text-lg font-bold text-brand-textDark flex items-center gap-2">
-                            <i class="fa-brands fa-youtube text-red-600 text-xl"></i> 関連動画
+                            <i id="videoPlatformIcon" class="fa-solid fa-play-circle text-red-600 text-xl"></i>
+                            <span>関連動画</span>
                         </h2>
                         <span id="videoTypeBadge" class="text-xs bg-red-100 text-red-700 px-3 py-1 rounded-full font-semibold">
                             公式MV
@@ -306,7 +309,7 @@
                     <div id="noVideoBox" class="hidden bg-amber-50 border border-amber-200 text-amber-800 p-6 rounded-xl text-center">
                         <i class="fa-solid fa-triangle-exclamation text-2xl text-amber-500 mb-2"></i>
                         <p class="font-bold text-base">適切な動画が見つかりませんでした</p>
-                        <p class="text-xs text-amber-700 mt-1">公式MVまたは本人歌唱動画をWeb上で検索してお試しください。</p>
+                        <p class="text-xs text-amber-700 mt-1">公式MVまたは本人歌唱動画をVimeoやYouTubeで検索してお試しください。</p>
                     </div>
                 </section>
 
@@ -511,23 +514,77 @@
 
             <div class="relative overflow-hidden rounded-2xl bg-black border border-gray-800 shadow-2xl p-3 sm:p-4" onmouseenter="ytPauseSlideOnHover()" onmouseleave="ytResumeSlideOnLeave()">
                 <div id="ytPlaylistTrack" class="flex playlist-transition">
-                    <div class="w-full flex-shrink-0 px-1">
-                        <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z2tHNoyrlwh_zJKixwtm8bM" width="100%" height="352" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+                    
+                    <!-- Playlist Slide 1 -->
+                    <div class="w-full flex-shrink-0 px-1 space-y-2">
+                        <div class="bg-gray-900/90 border border-gray-800 rounded-lg px-3 py-1.5 text-xs text-gray-200 font-bold flex items-center justify-between">
+                            <span class="flex items-center gap-2 truncate">
+                                <i class="fa-solid fa-list-ul text-brand-red"></i>
+                                <span id="ytPlaylistTitle-0">読み込み中...</span>
+                            </span>
+                            <span class="text-[10px] text-gray-400 font-mono">1/6</span>
+                        </div>
+                        <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z2tHNoyrlwh_zJKixwtm8bM" width="100%" height="320" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
                     </div>
-                    <div class="w-full flex-shrink-0 px-1">
-                        <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z20bTPhDlk-LEDZgTBbYCKG" width="100%" height="352" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+
+                    <!-- Playlist Slide 2 -->
+                    <div class="w-full flex-shrink-0 px-1 space-y-2">
+                        <div class="bg-gray-900/90 border border-gray-800 rounded-lg px-3 py-1.5 text-xs text-gray-200 font-bold flex items-center justify-between">
+                            <span class="flex items-center gap-2 truncate">
+                                <i class="fa-solid fa-list-ul text-brand-red"></i>
+                                <span id="ytPlaylistTitle-1">読み込み中...</span>
+                            </span>
+                            <span class="text-[10px] text-gray-400 font-mono">2/6</span>
+                        </div>
+                        <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z20bTPhDlk-LEDZgTBbYCKG" width="100%" height="320" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
                     </div>
-                    <div class="w-full flex-shrink-0 px-1">
-                        <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z3v1-Md3ohxfo7aFT-K7ZdL" width="100%" height="352" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+
+                    <!-- Playlist Slide 3 -->
+                    <div class="w-full flex-shrink-0 px-1 space-y-2">
+                        <div class="bg-gray-900/90 border border-gray-800 rounded-lg px-3 py-1.5 text-xs text-gray-200 font-bold flex items-center justify-between">
+                            <span class="flex items-center gap-2 truncate">
+                                <i class="fa-solid fa-list-ul text-brand-red"></i>
+                                <span id="ytPlaylistTitle-2">読み込み中...</span>
+                            </span>
+                            <span class="text-[10px] text-gray-400 font-mono">3/6</span>
+                        </div>
+                        <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z3v1-Md3ohxfo7aFT-K7ZdL" width="100%" height="320" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
                     </div>
-                    <div class="w-full flex-shrink-0 px-1">
-                        <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z2XFIGkRRw4ooJdrpjwrfWH" width="100%" height="352" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+
+                    <!-- Playlist Slide 4 -->
+                    <div class="w-full flex-shrink-0 px-1 space-y-2">
+                        <div class="bg-gray-900/90 border border-gray-800 rounded-lg px-3 py-1.5 text-xs text-gray-200 font-bold flex items-center justify-between">
+                            <span class="flex items-center gap-2 truncate">
+                                <i class="fa-solid fa-list-ul text-brand-red"></i>
+                                <span id="ytPlaylistTitle-3">読み込み中...</span>
+                            </span>
+                            <span class="text-[10px] text-gray-400 font-mono">4/6</span>
+                        </div>
+                        <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z2XFIGkRRw4ooJdrpjwrfWH" width="100%" height="320" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
                     </div>
-                    <div class="w-full flex-shrink-0 px-1">
-                        <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z1YJjkKMQs5QpAbyE-uf8vK" width="100%" height="352" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+
+                    <!-- Playlist Slide 5 -->
+                    <div class="w-full flex-shrink-0 px-1 space-y-2">
+                        <div class="bg-gray-900/90 border border-gray-800 rounded-lg px-3 py-1.5 text-xs text-gray-200 font-bold flex items-center justify-between">
+                            <span class="flex items-center gap-2 truncate">
+                                <i class="fa-solid fa-list-ul text-brand-red"></i>
+                                <span id="ytPlaylistTitle-4">読み込み中...</span>
+                            </span>
+                            <span class="text-[10px] text-gray-400 font-mono">5/6</span>
+                        </div>
+                        <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z1YJjkKMQs5QpAbyE-uf8vK" width="100%" height="320" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
                     </div>
-                    <div class="w-full flex-shrink-0 px-1">
-                        <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z2UVK7cANQml6KB7_RMQ8Wy" width="100%" height="352" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+
+                    <!-- Playlist Slide 6 -->
+                    <div class="w-full flex-shrink-0 px-1 space-y-2">
+                        <div class="bg-gray-900/90 border border-gray-800 rounded-lg px-3 py-1.5 text-xs text-gray-200 font-bold flex items-center justify-between">
+                            <span class="flex items-center gap-2 truncate">
+                                <i class="fa-solid fa-list-ul text-brand-red"></i>
+                                <span id="ytPlaylistTitle-5">読み込み中...</span>
+                            </span>
+                            <span class="text-[10px] text-gray-400 font-mono">6/6</span>
+                        </div>
+                        <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z2UVK7cANQml6KB7_RMQ8Wy" width="100%" height="320" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
                     </div>
                 </div>
 
@@ -576,11 +633,47 @@
         let ytIsAutoSlidePaused = false;
         let ytIsHoverPaused = false;
 
+        // YouTube Playlists Data (IDs & Fallbacks)
+        const ytPlaylists = [
+            { id: "PLtNoF8CCU5z2tHNoyrlwh_zJKixwtm8bM", fallback: "PURE VOX - A Cappella Hits Vol.1" },
+            { id: "PLtNoF8CCU5z20bTPhDlk-LEDZgTBbYCKG", fallback: "PURE VOX - Western Pop Covers" },
+            { id: "PLtNoF8CCU5z3v1-Md3ohxfo7aFT-K7ZdL", fallback: "PURE VOX - Vocal Harmonies" },
+            { id: "PLtNoF8CCU5z2XFIGkRRw4ooJdrpjwrfWH", fallback: "PURE VOX - Acoustic & A Cappella" },
+            { id: "PLtNoF8CCU5z1YJjkKMQs5QpAbyE-uf8vK", fallback: "PURE VOX - Classic Covers Collection" },
+            { id: "PLtNoF8CCU5z2UVK7cANQml6KB7_RMQ8Wy", fallback: "PURE VOX - Live & Special Performance" }
+        ];
+
         // Init on page load
         window.addEventListener('DOMContentLoaded', () => {
             startAutoSlide();
             startYtAutoSlide();
+            fetchYtPlaylistTitles();
         });
+
+        // Fetch YouTube Playlist Titles using oEmbed API
+        async function fetchYtPlaylistTitles() {
+            ytPlaylists.forEach(async (item, idx) => {
+                const titleElem = document.getElementById(`ytPlaylistTitle-${idx}`);
+                if (!titleElem) return;
+
+                try {
+                    const oembedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/playlist?list=${item.id}&format=json`;
+                    const res = await fetch(oembedUrl);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data && data.title) {
+                            titleElem.innerText = data.title;
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    console.log(`Could not fetch oembed for playlist ${item.id}, using fallback.`);
+                }
+                
+                // Fallback title if oEmbed fetch is blocked by CORS/network
+                titleElem.innerText = item.fallback;
+            });
+        }
 
         // Sample Input Click Handler
         function setSample(artist, song) {
@@ -709,7 +802,6 @@
             if (refreshIcon) refreshIcon.classList.add('animate-spin');
 
             try {
-                // Check if running in blob preview environment
                 if (window.location.protocol.startsWith('blob') || window.location.origin === 'null') {
                     throw new Error("Preview mode active");
                 }
@@ -768,25 +860,38 @@
             if (!artist || !song) return;
 
             // UI view state transition
+            document.getElementById('errorState').classList.add('hidden');
             document.getElementById('welcomeState').classList.add('hidden');
             document.getElementById('resultsArea').classList.add('hidden');
             document.getElementById('loadingState').classList.remove('hidden');
             document.getElementById('loadingTitle').innerText = `「${artist} - ${song}」を解析中...`;
 
             // Brief delay for visual transition smoothness
-            await new Promise(r => setTimeout(r, 400));
+            await new Promise(r => setTimeout(r, 300));
 
             try {
                 const data = await fetchMusicInsights(artist, song);
                 renderResults(artist, song, data);
-            } catch (error) {
-                // Fallback to intelligent client-side dynamic mock engine when backend is unavailable
-                const mockData = getMockData(artist, song);
-                renderResults(artist, song, mockData);
-            } finally {
-                document.getElementById('loadingState').classList.add('hidden');
                 document.getElementById('resultsArea').classList.remove('hidden');
                 document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                console.error("Search Error:", error);
+                
+                // If running in local blob/iframe preview mode, use mock fallback
+                if (window.location.protocol.startsWith('blob') || window.location.origin === 'null') {
+                    const mockData = getMockData(artist, song);
+                    renderResults(artist, song, mockData);
+                    document.getElementById('resultsArea').classList.remove('hidden');
+                    document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    // Show explicit API error message on real deployed server
+                    document.getElementById('errorState').classList.remove('hidden');
+                    document.getElementById('errorTitle').innerText = "リアルタイム解析に失敗しました";
+                    document.getElementById('errorMessage').innerText = error.message || "APIキーの設定または通信状態をご確認ください。";
+                    document.getElementById('welcomeState').classList.remove('hidden');
+                }
+            } finally {
+                document.getElementById('loadingState').classList.add('hidden');
             }
         }
 
@@ -803,53 +908,87 @@
                 body: JSON.stringify({ type: 'search', artist, song })
             });
 
+            const resJson = await response.json().catch(() => ({}));
+
             if (!response.ok) {
-                const errJson = await response.json().catch(() => ({}));
-                throw new Error(errJson.error || `API response error: ${response.status}`);
+                throw new Error(resJson.error || `APIエラー (Status: ${response.status})`);
             }
 
-            const result = await response.json();
-            const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (!jsonText) throw new Error("Invalid API response format");
+            // Parse response from Gemini API structure
+            const candidate = resJson.candidates?.[0];
+            if (!candidate) throw new Error("Geminiからの応答データが空でした。");
 
-            const cleanText = jsonText.replace(/```json/g, '').replace(/```/g, '').trim();
-            return JSON.parse(cleanText);
+            // Extract text content across parts
+            const parts = candidate.content?.parts || [];
+            let rawText = parts.map(p => p.text || '').join('');
+
+            if (!rawText) throw new Error("Geminiからの解析結果テキストが取得できませんでした。");
+
+            // Strip markdown JSON code fence blocks if present
+            let cleanJson = rawText.trim();
+            cleanJson = cleanJson.replace(/^```json/i, '').replace(/^```/i, '').replace(/```$/i, '').trim();
+
+            // Find JSON boundaries
+            const firstBrace = cleanJson.indexOf('{');
+            const lastBrace = cleanJson.lastIndexOf('}');
+            if (firstBrace !== -1 && lastBrace !== -1) {
+                cleanJson = cleanJson.substring(firstBrace, lastBrace + 1);
+            }
+
+            return JSON.parse(cleanJson);
         }
 
         // Render Results Function
         function renderResults(artist, song, data) {
-            // 1. YouTube Section
+            // 1. Video Player Section Handling (Vimeo prioritized, YouTube fallback)
             const videoContainer = document.getElementById('videoEmbedContainer');
             const noVideoBox = document.getElementById('noVideoBox');
             const videoTypeBadge = document.getElementById('videoTypeBadge');
             const videoExternalLink = document.getElementById('videoExternalLink');
+            const videoPlatformIcon = document.getElementById('videoPlatformIcon');
 
-            if (data.youtube && data.youtube.videoId) {
+            // Normalize video data format (support new "video" structure or legacy "youtube" structure)
+            const videoInfo = data.video || (data.youtube ? {
+                platform: data.youtube.videoId ? 'youtube' : null,
+                videoId: data.youtube.videoId,
+                type: data.youtube.type
+            } : null);
+
+            if (videoInfo && videoInfo.videoId) {
                 videoContainer.classList.remove('hidden');
                 noVideoBox.classList.add('hidden');
-                videoContainer.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${data.youtube.videoId}?rel=0&enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
-                videoTypeBadge.innerText = data.youtube.type || '公式動画';
-                
-                videoExternalLink.innerHTML = `
-                    <a href="https://www.youtube.com/watch?v=${data.youtube.videoId}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs text-brand-red hover:underline font-bold">
-                        <span>YouTubeで直接開いて見る</span>
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </a>
-                `;
-            } else if (data.youtube && data.youtube.searchQuery) {
-                videoContainer.classList.remove('hidden');
-                noVideoBox.classList.add('hidden');
-                videoContainer.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed?listType=search&list=${data.youtube.searchQuery}" title="YouTube search player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
-                videoTypeBadge.innerText = 'YouTube検索再生';
-                videoExternalLink.innerHTML = `
-                    <a href="https://www.youtube.com/results?search_query=${data.youtube.searchQuery}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs text-brand-red hover:underline font-bold">
-                        <span>YouTubeで検索結果を表示</span>
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </a>
-                `;
+
+                if (videoInfo.platform === 'vimeo') {
+                    // Render Vimeo Player
+                    videoPlatformIcon.className = "fa-brands fa-vimeo-v text-blue-500 text-xl";
+                    videoContainer.innerHTML = `<iframe src="https://player.vimeo.com/video/${videoInfo.videoId}?autoplay=0&autopause=1" class="w-full h-full" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+                    videoTypeBadge.className = "text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-semibold";
+                    videoTypeBadge.innerText = `Vimeo (${videoInfo.type || '公式動画'})`;
+                    
+                    videoExternalLink.innerHTML = `
+                        <a href="https://vimeo.com/${videoInfo.videoId}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:underline font-bold">
+                            <span>Vimeoで直接開いて見る</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    `;
+                } else {
+                    // Render YouTube Player
+                    videoPlatformIcon.className = "fa-brands fa-youtube text-red-600 text-xl";
+                    videoContainer.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoInfo.videoId}?rel=0&enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+                    videoTypeBadge.className = "text-xs bg-red-100 text-red-700 px-3 py-1 rounded-full font-semibold";
+                    videoTypeBadge.innerText = `YouTube (${videoInfo.type || '公式動画'})`;
+                    
+                    videoExternalLink.innerHTML = `
+                        <a href="https://www.youtube.com/watch?v=${videoInfo.videoId}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs text-brand-red hover:underline font-bold">
+                            <span>YouTubeで直接開いて見る</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    `;
+                }
             } else {
                 videoContainer.classList.add('hidden');
                 noVideoBox.classList.remove('hidden');
+                videoPlatformIcon.className = "fa-solid fa-circle-play text-gray-500 text-xl";
                 videoTypeBadge.innerText = '該当なし';
                 videoExternalLink.innerHTML = '';
             }
@@ -900,56 +1039,55 @@
             });
         }
 
-        // Fallback Mock Engine for local preview / standalone usage
+        // Mock Engine Fallback for Preview Modes
         function getMockData(artist, song) {
             const query = `${artist} ${song}`.toLowerCase();
             
-            // Map preset song video IDs
+            let platform = 'youtube';
             let videoId = null;
-            if (query.includes('bruno mars') && query.includes('just the way')) videoId = 'LjhCEhWiKXk';
-            else if (query.includes('taylor swift') && query.includes('cruel summer')) videoId = 'ic8j13piUrQ';
-            else if (query.includes('billie eilish') && query.includes('birds of a feather')) videoId = 'd5gf9dXb4ik';
-            else if (query.includes('official') || query.includes('subtitle')) videoId = 'hN5MBlGv2Ac';
-            else if (query.includes('vaundy') || query.includes('怪獣')) videoId = 'UM9XNpgrqBk';
-            else if (query.includes('sabrina') || query.includes('espresso')) videoId = 'eVli-tstM5E';
-            else if (query.includes('die with a smile')) videoId = 'kPa7bsKwL-c';
 
-            const isJapanese = /[一-龠ぁ-ゔァ-ヴー]/.test(artist + song) || query.includes('official') || query.includes('vaundy');
+            if (query.includes('bruno mars') && query.includes('just the way')) { videoId = 'LjhCEhWiKXk'; }
+            else if (query.includes('taylor swift') && query.includes('cruel summer')) { videoId = 'ic8j13piUrQ'; }
+            else if (query.includes('billie eilish') && query.includes('birds of a feather')) { videoId = 'd5gf9dXb4ik'; }
+            else if (query.includes('official') || query.includes('subtitle')) { videoId = 'hN5MBlGv2Ac'; }
+            else { videoId = '1084537'; platform = 'vimeo'; } // Fallback Vimeo ID
+
+            const isJapanese = /[一-龠ぁ-ゔァ-ヴー]/.test(artist + song);
 
             return {
-                youtube: {
+                video: {
+                    platform: videoId ? platform : null,
                     videoId: videoId,
-                    searchQuery: encodeURIComponent(`${artist} ${song}`),
-                    type: videoId ? "公式MV" : "検索プレイヤー"
+                    type: videoId ? "公式MV" : null
                 },
                 artist: {
-                    origin: isJapanese ? "日本" : "アメリカ / イギリス",
-                    age: "人気トップアーティスト",
-                    bio: `${artist}は唯一無二の音楽性と表現力で幅広い支持を集めるアーティスト。「${song}」をはじめ、親しみやすさと音楽的技巧を兼ね備えた話題曲を世界中で展開しています。`,
-                    topSongs: [song, "代表ヒット曲 01", "代表ヒット曲 02"]
+                    origin: isJapanese ? "日本" : "海外",
+                    age: "人気アーティスト",
+                    bio: `${artist}は独特の世界観とヴォーカル表現で注目されるアーティスト。「${song}」でも高い歌唱技術と独創的なサウンドメイクが活かされています。`,
+                    topSongs: [song, "ヒット曲 01", "ヒット曲 02"]
                 },
                 song: {
-                    release: "ヒットチャートナンバー",
-                    key: "C Major / A Minor (標準)",
-                    bpm: "116 - 128 (ミディアムテンポ)",
-                    features: `「${song}」はキャッチーなサビとドラマチックなメロディラインが非常に魅力的な作品です。洗練されたアレンジメントがボーカルの存在感を惹き立てています。`,
-                    vocalFeatures: "ブレのないピッチ感とスムーズな裏声/表声の切り替えがポイント。語りかけるようなAメロからサビへの感情の開放を意識すると豊かに歌いこなせます。"
+                    release: "ヒットソング",
+                    key: "C Major / A Minor",
+                    bpm: "115 - 128 BPM",
+                    features: `「${song}」はキャッチーなメロディラインと洗練されたコード進行が特徴の楽曲です。`,
+                    vocalFeatures: "サビでの高音域の伸びと、フレーズ頭のアタック感が重要になります。ブレスのタイミングを意識するとスムーズに歌い繋げます。"
                 },
                 similarSongs: [
                     {
                         artist: isJapanese ? "Official髭男dism" : "Bruno Mars",
                         song: isJapanese ? "Pretender" : "Leave the Door Open",
-                        reason: "グルーヴ感あふれるコード進行と、キャッチーで伸びやかなヴォーカルラインの構造が類似しているため。"
+                        reason: "メロディのフックと歌唱時の声区切り替えのアプローチが酷似しているため。"
                     },
                     {
                         artist: isJapanese ? "Mrs. GREEN APPLE" : "Taylor Swift",
                         song: isJapanese ? "ダンスホール" : "Anti-Hero",
-                        reason: "親しみやすいポップ感と現代的なサウンドメイク、歌唱時の発声アプローチに高い親和性があります。"
+                        reason: "リズムのノリと世界観の構築方法に共通の魅力があります。"
                     },
                     {
                         artist: isJapanese ? "Vaundy" : "Ed Sheeran",
                         song: isJapanese ? "踊り子" : "Shape of You",
-                        reason: "印象的なリズムループとメロディのフック（引っ掛かり）が効いており、ボイストレーニングの題材としてもお勧めです。"
+                        reason: "グルーヴ感のあるトラックとヴォーカルの乗り方が非常に近いため。"
                     }
                 ]
             };
