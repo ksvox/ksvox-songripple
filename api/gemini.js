@@ -5,19 +5,22 @@ export default async function handler(req, res) {
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'GEMINI_API_KEY is not configured in Vercel Environment Variables.' });
+    return res.status(500).json({ 
+      error: 'GEMINI_API_KEY がVercelの環境変数に設定されていません。Vercelの管理画面（Settings > Environment Variables）で GEMINI_API_KEY を登録し、Re-deploy してください。' 
+    });
   }
 
   const { type, artist, song } = req.body || {};
   
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+  // 優先試行するGeminiモデルのリスト（gemini-3.5-flash, gemini-3-flash を最優先に設定）
+  const candidateModels = ['gemini-3.5-flash', 'gemini-3-flash', 'gemini-2.0-flash'];
 
   try {
     let payload;
 
     if (type === 'trending') {
-      const systemPrompt = "あなたは音楽トレンドのアナリストです。現在世界的および日本でヒットしている人気曲を4曲選出し、JSON形式で返答してください。";
-      const userPrompt = "話題のヒット曲を洋楽3曲、邦楽1曲の割合で出力してください。";
+      const systemPrompt = "あなたは世界および日本の最新音楽トレンドに詳しいアナリストです。現在人気を博しているヒット曲を4曲選出し、純粋なJSON配列形式のみで出力してください。[{\"artist\":\"...\", \"song\":\"...\"}]";
+      const userPrompt = "現在ヒットしている話題の楽曲を洋楽3曲、邦楽1曲の割合で4曲選出してJSON形式で返してください。";
 
       payload = {
         contents: [{ parts: [{ text: userPrompt }] }],
@@ -25,39 +28,59 @@ export default async function handler(req, res) {
         tools: [{ googleSearch: {} }]
       };
     } else {
-      const systemPrompt = `あなたはプロの音楽評論家・ボイストレーナー・音楽データアナリストです。
-Google検索ツールを使用して、指定されたアーティスト「${artist}」と楽曲「${song}」について最新かつ正確な実在データを必ず検索・収集してください。
+      const systemPrompt = `プロの音楽アナリスト・ボイストレーナーとして動作してください。
+指定されたアーティスト「${artist}」と楽曲「${song}」について、Google検索で最新の実在データを調査・分析し、必ず正確な事実のみに基づいて回答してください。
 
-【出力要件】
-以下のフォーマットの純粋なJSONオブジェクトのみを出力してください（エクスプレッションやバックトック装飾は不要です）。
+【動画情報の最優先検索指示】
+1. 動画（video）については、まず第一優先として **Vimeo (vimeo.com)** から「${artist} ${song}」の公式MV、公式ライブ、または高品位パフォーマンス動画のID（英数字・数字ID）を検索して特定してください。
+2. Vimeoで該当動画が見つかった場合は、platform を "vimeo" とし、videoId にVimeoのIDを設定してください。
+3. Vimeoで見つからなかった場合のみ、第二優先として **YouTube** から公式MV/公式オーディオ（11桁のvideoId）を検索し、platform を "youtube", videoId に設定してください。
+4. どちらも見つからない場合は platform: null, videoId: null としてください。
+
+【厳格なその他の指示】
+1. 必ず「${artist}」の実在する出身地・キャリア年数、楽曲「${song}」の実在するリリース年/発売日、キー(Key)、BPM(テンポ)を特定してください。
+2. 代表曲(topSongs)には「${artist}」の実際に存在する有名ヒット曲タイトルを3曲挙げてください。
+3. 必ず以下のJSON構造のみで返答してください。説明文やコードブロック前後の余計なテキストは一切含めないでください。
+
 {
-  "youtube": {
-    "videoId": "該当楽曲の公式MVまたは公式オーディオのYouTube 11桁ID（不明な場合はnull）",
-    "type": "公式MV", "公式リリックMV", または "公式オーディオ"
+  "video": {
+    "platform": "vimeo または youtube または null",
+    "videoId": "VimeoのID または 11桁のYouTube ID または null",
+    "type": "公式MV または 公式オーディオ または パフォーマンス"
   },
   "artist": {
-    "origin": "出身地・活動拠点",
-    "age": "生年月日・キャリア",
-    "bio": "経歴・音楽的特徴の日本語解説 (200文字程度)",
-    "topSongs": ["代表曲1", "代表曲2", "代表曲3"]
+    "origin": "実在する出身地・活動拠点",
+    "age": "年齢またはデビュー年・キャリア",
+    "bio": "アーティストの経歴や音楽的特徴の日本語解説 (150-200文字)",
+    "topSongs": ["実在ヒット曲1", "実在ヒット曲2", "実在ヒット曲3"]
   },
   "song": {
-    "release": "リリース時期",
-    "key": "楽曲のKey/調 (例: A Major)",
-    "bpm": "テンポ/BPM (例: 120)",
-    "features": "ジャンルやコード構成の特徴解説 (120文字程度)",
-    "vocalFeatures": "歌唱発声のアドバイスや声質特徴 (150文字程度)"
+    "release": "実在するリリース年・発売日",
+    "key": "実在する楽曲の調/Key (例: E Major)",
+    "bpm": "実在するBPM/テンポ (例: 118 BPM)",
+    "features": "曲調・ジャンル・コード進行・アレンジの特徴 (120文字程度)",
+    "vocalFeatures": "ヴォーカルの発声・ミックスボイス・歌唱テクニック・難易度のアドバイス (150文字程度)"
   },
   "similarSongs": [
     {
-      "artist": "類似曲のアーティスト",
-      "song": "類似曲名",
-      "reason": "類似点とおすすめ理由 (100文字程度)"
+      "artist": "実在する類似アーティスト1",
+      "song": "実在する類似楽曲1",
+      "reason": "音楽的構造やボーカル表現の共通点 (80文字程度)"
+    },
+    {
+      "artist": "実在する類似アーティスト2",
+      "song": "実在する類似楽曲2",
+      "reason": "音楽的構造やボーカル表現の共通点 (80文字程度)"
+    },
+    {
+      "artist": "実在する類似アーティスト3",
+      "song": "実在する類似楽曲3",
+      "reason": "音楽的構造やボーカル表現の共通点 (80文字程度)"
     }
   ]
 }`;
 
-      const userPrompt = `以下のアーティストと楽曲についてGoogle検索を行い、詳細を調べて結果をJSONで返してください。\nアーティスト: "${artist}"\n曲名: "${song}"`;
+      const userPrompt = `アーティスト「${artist}」と楽曲「${song}」についてVimeo/YouTube等の実データを検索し、指定のJSONで返してください。`;
 
       payload = {
         contents: [{ parts: [{ text: userPrompt }] }],
@@ -66,20 +89,26 @@ Google検索ツールを使用して、指定されたアーティスト「${art
       };
     }
 
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
+    let lastErrorText = '';
+    for (const model of candidateModels) {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
 
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error('Gemini API Error Response:', errText);
-      return res.status(response.status).json({ error: `Gemini API Error: ${errText}` });
+      if (response.ok) {
+        const data = await response.json();
+        return res.status(200).json(data);
+      } else {
+        lastErrorText = await response.text();
+        console.warn(`Model ${model} failed (${response.status}): ${lastErrorText}`);
+      }
     }
 
-    const data = await response.json();
-    return res.status(200).json(data);
+    return res.status(500).json({ error: `Gemini API エラー: ${lastErrorText}` });
   } catch (error) {
     console.error('Serverless Handler Exception:', error);
     return res.status(500).json({ error: error.message });
