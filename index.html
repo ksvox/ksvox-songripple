@@ -12,6 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             theme: {
@@ -94,14 +95,13 @@
             <div class="flex items-center justify-between mb-6">
                 <!-- Square/Uncropped Logo & Brand Name -->
                 <div class="flex items-center space-x-4">
-                    <!-- Logo Container: Displays logo.png without cropping; falls back seamlessly if missing -->
+                    <!-- Logo Container -->
                     <div class="relative w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 bg-black p-1 rounded-2xl border border-red-500/40 shadow-xl shadow-red-950/60 flex items-center justify-center overflow-hidden">
-                        <!-- User's exact original logo image (Placed in same folder as logo.png upon GitHub deploy) -->
                         <img src="logo.png" alt="Song Ripple Logo" 
                              class="w-full h-full object-contain rounded-xl relative z-10" 
                              onerror="this.style.display='none'; document.getElementById('svgFallbackLogo').classList.remove('hidden');">
                         
-                        <!-- Fallback SVG Logo (Used in this preview before logo.png is uploaded to GitHub) -->
+                        <!-- Fallback SVG Logo -->
                         <svg id="svgFallbackLogo" class="hidden w-full h-full relative z-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <defs>
                                 <linearGradient id="songRippleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -136,10 +136,9 @@
                 <div class="absolute -top-20 -left-20 w-64 h-64 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="absolute -bottom-20 -right-20 w-72 h-72 bg-brand-red/20 rounded-full blur-3xl pointer-events-none"></div>
                 
-                <!-- Neon Vinyl Record Background Overlay (Mobile Optimized & Centered Scaling) -->
+                <!-- Neon Vinyl Record Background Overlay -->
                 <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40 sm:opacity-35 select-none overflow-visible" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice">
                     <defs>
-                        <!-- Neon Gradients -->
                         <linearGradient id="neonVinylGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.9"/>
                             <stop offset="40%" stop-color="#E52E2E" stop-opacity="1"/>
@@ -154,8 +153,6 @@
                             <stop offset="70%" stop-color="#121824" stop-opacity="0.9"/>
                             <stop offset="100%" stop-color="#0A0D14" stop-opacity="1"/>
                         </radialGradient>
-                        
-                        <!-- Glow Filter -->
                         <filter id="neonGlowEffect" x="-30%" y="-30%" width="160%" height="160%">
                             <feGaussianBlur stdDeviation="3.5" result="blur1" />
                             <feGaussianBlur stdDeviation="8" result="blur2" />
@@ -167,20 +164,16 @@
                         </filter>
                     </defs>
 
-                    <!-- Neon Sound Waves & Ripples Behind Vinyl -->
+                    <!-- Neon Sound Waves -->
                     <g filter="url(#neonGlowEffect)" class="animate-neon-pulse">
                         <path d="M -50,200 Q 150,90 300,210 T 650,180" stroke="url(#neonVinylGrad)" stroke-width="2" fill="none" opacity="0.6"/>
                         <path d="M -50,220 Q 200,290 380,170 T 650,230" stroke="url(#neonCyanGrad)" stroke-width="1.5" fill="none" stroke-dasharray="6 6" opacity="0.5"/>
                     </g>
 
-                    <!-- Main Spinning Neon Vinyl Record (Centered & Scaled for Mobile/Desktop screens) -->
+                    <!-- Main Spinning Neon Vinyl Record -->
                     <g transform="translate(420, 200)">
-                        <!-- Rotating Record Vinyl Disk -->
                         <g class="animate-vinyl-spin">
-                            <!-- Outer Rim -->
                             <circle cx="0" cy="0" r="145" fill="#0A0D14" stroke="url(#neonVinylGrad)" stroke-width="3" filter="url(#neonGlowEffect)"/>
-                            
-                            <!-- Grooves (Vinyl Grooves with Neon Reflection) -->
                             <circle cx="0" cy="0" r="132" stroke="rgba(255,255,255,0.08)" stroke-width="1" fill="none"/>
                             <circle cx="0" cy="0" r="118" stroke="url(#neonVinylGrad)" stroke-width="1.5" stroke-dasharray="12 8 35 15" fill="none" opacity="0.75" filter="url(#neonGlowEffect)"/>
                             <circle cx="0" cy="0" r="105" stroke="rgba(255,255,255,0.05)" stroke-width="1" fill="none"/>
@@ -189,16 +182,13 @@
                             <circle cx="0" cy="0" r="68" stroke="url(#neonVinylGrad)" stroke-width="1.5" stroke-dasharray="15 15" fill="none" opacity="0.8"/>
                             <circle cx="0" cy="0" r="55" stroke="rgba(255,255,255,0.06)" stroke-width="1" fill="none"/>
 
-                            <!-- Center Label -->
                             <circle cx="0" cy="0" r="42" fill="url(#centerLabelGlow)" stroke="url(#neonVinylGrad)" stroke-width="2"/>
                             <circle cx="0" cy="0" r="15" fill="#000000" stroke="#FF4D4D" stroke-width="1.5"/>
                             <circle cx="0" cy="0" r="5" fill="#00E5FF"/>
-                            
-                            <!-- Music Note Icons on Label -->
                             <path d="M -7 -12 L 7 -16 L 7 -4 L -7 0 Z" fill="url(#neonVinylGrad)" opacity="0.4"/>
                         </g>
 
-                        <!-- Tonearm (Vinyl Needle Arm) -->
+                        <!-- Tonearm -->
                         <g filter="url(#neonGlowEffect)">
                             <circle cx="-110" cy="-115" r="9" fill="#121824" stroke="#00E5FF" stroke-width="2"/>
                             <path d="M -110 -115 L -50 -55 L -32 15" stroke="#00E5FF" stroke-width="2.5" fill="none" stroke-linecap="round"/>
@@ -206,7 +196,6 @@
                         </g>
                     </g>
 
-                    <!-- Secondary Ambient Vinyl Disk (Left Side Offset for Depth) -->
                     <g transform="translate(80, 200)" opacity="0.25">
                         <g class="animate-vinyl-spin">
                             <circle cx="0" cy="0" r="110" fill="none" stroke="url(#neonCyanGrad)" stroke-width="2" filter="url(#neonGlowEffect)"/>
@@ -217,7 +206,6 @@
                     </g>
                 </svg>
 
-                <!-- Direct Instruction Text Above Form Inputs -->
                 <div class="relative z-10 mb-4 flex items-center justify-between border-b border-gray-800 pb-2.5">
                     <p class="text-xs sm:text-sm font-semibold text-brand-red flex items-center gap-2">
                         <i class="fa-solid fa-circle-info"></i> アーティスト名と曲名を入力してください
@@ -227,7 +215,6 @@
 
                 <form id="searchForm" onsubmit="handleSearch(event)" class="relative z-10 space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Artist Input -->
                         <div>
                             <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
                                 <i class="fa-solid fa-user-ninja text-brand-red mr-1.5"></i>アーティスト名
@@ -235,7 +222,6 @@
                             <input type="text" id="artistInput" required placeholder="例: Bruno Mars, Taylor Swift, Vaundy" 
                                 class="w-full bg-gray-900/90 border border-gray-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red transition placeholder-gray-500 shadow-inner">
                         </div>
-                        <!-- Song Input -->
                         <div>
                             <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
                                 <i class="fa-solid fa-music text-brand-red mr-1.5"></i>曲名
@@ -245,7 +231,6 @@
                         </div>
                     </div>
 
-                    <!-- Submit Button -->
                     <div class="pt-2">
                         <button type="submit" id="searchBtn" 
                             class="w-full bg-gradient-to-r from-brand-red via-red-600 to-rose-700 hover:from-brand-redHover hover:to-red-700 text-white font-bold py-3.5 px-6 rounded-xl transition duration-200 transform hover:-translate-y-0.5 shadow-lg shadow-brand-red/30 flex items-center justify-center space-x-2 text-base">
@@ -255,17 +240,15 @@
                     </div>
                 </form>
 
-                <!-- Quick Preset Tags (3 Western : 1 Japanese Ratio) -->
+                <!-- Quick Preset Tags -->
                 <div class="relative z-10 mt-4 pt-3 border-t border-gray-800/80 flex items-center flex-wrap gap-2 text-xs text-gray-400">
                     <span class="font-medium text-gray-400"><i class="fa-solid fa-bolt text-yellow-500 mr-1"></i>サンプル検索:</span>
                     <div id="sampleTagsContainer" class="flex items-center flex-wrap gap-2">
-                        <!-- Default Western 3 : Japanese 1 -->
                         <button onclick="setSample('Bruno Mars', 'Just the Way You Are')" class="bg-gray-800/60 hover:bg-brand-red/20 hover:text-brand-red text-gray-300 px-2.5 py-1 rounded-md transition border border-gray-700/50">Bruno Mars - Just the Way You Are</button>
                         <button onclick="setSample('Taylor Swift', 'Cruel Summer')" class="bg-gray-800/60 hover:bg-brand-red/20 hover:text-brand-red text-gray-300 px-2.5 py-1 rounded-md transition border border-gray-700/50">Taylor Swift - Cruel Summer</button>
                         <button onclick="setSample('Billie Eilish', 'BIRDS OF A FEATHER')" class="bg-gray-800/60 hover:bg-brand-red/20 hover:text-brand-red text-gray-300 px-2.5 py-1 rounded-md transition border border-gray-700/50">Billie Eilish - BIRDS OF A FEATHER</button>
                         <button onclick="setSample('Official髭男dism', 'Subtitle')" class="bg-gray-800/60 hover:bg-brand-red/20 hover:text-brand-red text-gray-300 px-2.5 py-1 rounded-md transition border border-gray-700/50">Official髭男dism - Subtitle</button>
                     </div>
-                    <!-- Auto-refresh trending songs button -->
                     <button onclick="fetchTrendingSamples()" title="ネット上の話題曲を自動更新" class="ml-auto text-xs bg-gray-800 hover:bg-gray-700 text-brand-red px-2.5 py-1 rounded-md transition border border-gray-700 flex items-center gap-1">
                         <i class="fa-solid fa-arrows-rotate text-[10px]" id="refreshIcon"></i> トレンド自動取得
                     </button>
@@ -274,7 +257,6 @@
         </div>
     </header>
 
-    <!-- Main Content Container -->
     <main class="flex-grow bg-brand-lightBg py-10 px-4 sm:px-6 lg:px-8">
         <div class="max-w-5xl mx-auto">
 
@@ -283,7 +265,6 @@
                 <div class="w-20 h-20 bg-red-50 text-brand-red rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner">
                     <i class="fa-solid fa-compact-disc animate-spin-slow"></i>
                 </div>
-                <!-- Updated Welcome Header & Smaller Subtext -->
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-brand-textDark">Song Ripple！より音楽を深く知ろう♪</h2>
                 <p class="text-xs sm:text-sm text-gray-500 max-w-xl mx-auto leading-relaxed">
                     AIがWeb上のデータを収集・分析し、アーティストと楽曲の詳細を即座にお届けします。
@@ -302,7 +283,7 @@
                 </div>
             </div>
 
-            <!-- Results View Area (Visible after search) -->
+            <!-- Results View Area -->
             <div id="resultsArea" class="hidden space-y-8">
 
                 <!-- 1. YouTube Player Section -->
@@ -316,17 +297,12 @@
                         </span>
                     </div>
 
-                    <!-- Video Container -->
                     <div id="videoEmbedContainer" class="aspect-video w-full rounded-xl overflow-hidden bg-black shadow-inner relative">
-                        <!-- Dynamic iframe inserted here -->
                     </div>
 
-                    <!-- Direct Link Secondary Button (Prevents Embed Error 153 Confusion) -->
                     <div id="videoExternalLink" class="mt-3 text-right">
-                        <!-- Dynamic Link -->
                     </div>
                     
-                    <!-- Fallback Alert Box -->
                     <div id="noVideoBox" class="hidden bg-amber-50 border border-amber-200 text-amber-800 p-6 rounded-xl text-center">
                         <i class="fa-solid fa-triangle-exclamation text-2xl text-amber-500 mb-2"></i>
                         <p class="font-bold text-base">適切な動画が見つかりませんでした</p>
@@ -349,7 +325,6 @@
                             </div>
                         </div>
 
-                        <!-- Info Grid -->
                         <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3.5 rounded-xl text-xs">
                             <div>
                                 <span class="text-gray-400 block font-medium">出身地・活動拠点</span>
@@ -361,7 +336,6 @@
                             </div>
                         </div>
 
-                        <!-- Biography -->
                         <div>
                             <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">経歴・バイオグラフィー</h3>
                             <p class="text-xs sm:text-sm text-gray-700 leading-relaxed bg-slate-50/70 p-3.5 rounded-xl border border-slate-100" id="resBio">
@@ -369,11 +343,9 @@
                             </p>
                         </div>
 
-                        <!-- Representative Tracks -->
                         <div>
                             <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">代表曲</h3>
                             <div class="flex flex-wrap gap-2" id="resTopSongs">
-                                <!-- Dynamic tags -->
                             </div>
                         </div>
                     </section>
@@ -390,7 +362,6 @@
                             </div>
                         </div>
 
-                        <!-- Key Stats (Key, BPM, Release) -->
                         <div class="grid grid-cols-3 gap-3 text-center">
                             <div class="bg-red-50/80 border border-red-100 p-3 rounded-xl">
                                 <span class="text-[10px] text-red-600 font-bold block uppercase">Key（調）</span>
@@ -406,7 +377,6 @@
                             </div>
                         </div>
 
-                        <!-- Musical Feature -->
                         <div>
                             <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">
                                 <i class="fa-solid fa-drum text-brand-red mr-1"></i> ジャンル・サウンドの特徴
@@ -416,7 +386,6 @@
                             </p>
                         </div>
 
-                        <!-- Vocal Feature -->
                         <div>
                             <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">
                                 <i class="fa-solid fa-microphone text-brand-red mr-1"></i> 歌唱の特徴・発声アドバイス
@@ -442,9 +411,7 @@
                         </div>
                     </div>
 
-                    <!-- Similar Songs Cards Container -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="similarSongsGrid">
-                        <!-- Dynamic generated cards -->
                     </div>
                 </section>
             </div>
@@ -455,7 +422,6 @@
     <section class="bg-black py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-900">
         <div class="max-w-5xl mx-auto space-y-6">
             
-            <!-- Section Title & Controls -->
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="text-center sm:text-left">
                     <h2 class="text-xl font-extrabold text-white flex items-center justify-center sm:justify-start gap-2">
@@ -464,7 +430,6 @@
                     </h2>
                 </div>
 
-                <!-- Manual Slide Controls -->
                 <div class="flex items-center space-x-3">
                     <button onclick="prevPlaylist()" class="w-10 h-10 rounded-full bg-gray-900 hover:bg-brand-red text-white flex items-center justify-center transition shadow-lg border border-gray-800">
                         <i class="fa-solid fa-chevron-left text-sm"></i>
@@ -479,32 +444,25 @@
                 </div>
             </div>
 
-            <!-- Carousel Wrapper -->
             <div class="relative overflow-hidden rounded-2xl bg-black border border-gray-800 shadow-2xl p-3 sm:p-4" onmouseenter="pauseSlideOnHover()" onmouseleave="resumeSlideOnLeave()">
                 <div id="playlistTrack" class="flex playlist-transition">
-                    <!-- Playlist 1 -->
                     <div class="w-full flex-shrink-0 px-1">
                         <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/2Zt73pxrTMb1qlkEE8Qdjs?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                     </div>
-                    <!-- Playlist 2 -->
                     <div class="w-full flex-shrink-0 px-1">
                         <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/5mvDPiR6GMEFUi3rWJChkM?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                     </div>
-                    <!-- Playlist 3 -->
                     <div class="w-full flex-shrink-0 px-1">
                         <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/5sbrHPJJ3DjViLKu7iHRUl?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                     </div>
-                    <!-- Playlist 4 -->
                     <div class="w-full flex-shrink-0 px-1">
                         <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/1ewxv2MrGu6Gus4DcuVv55?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                     </div>
-                    <!-- Playlist 5 -->
                     <div class="w-full flex-shrink-0 px-1">
                         <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/1XjJk5t2afccJGz3YOKLdg?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                     </div>
                 </div>
 
-                <!-- Slide Indicators (Dots) -->
                 <div class="flex justify-center space-x-2 mt-4" id="carouselDots">
                     <button onclick="goToPlaylist(0)" class="w-2.5 h-2.5 rounded-full bg-brand-red transition-all"></button>
                     <button onclick="goToPlaylist(1)" class="w-2.5 h-2.5 rounded-full bg-gray-700 hover:bg-gray-500 transition-all"></button>
@@ -514,7 +472,6 @@
                 </div>
             </div>
 
-            <!-- Spotify Profile Link -->
             <div class="mt-3 text-center">
                 <a href="https://open.spotify.com/user/u8wz5jev5l2tvtn04mbgfzis2?si=hTxKap6tQLCBkwZgwWdkGg&utm_source=copy-link" target="_blank" rel="noopener noreferrer" class="text-xs text-gray-400 hover:text-green-400 transition underline inline-flex items-center gap-1.5">
                     <i class="fa-brands fa-spotify text-green-500"></i>
@@ -529,7 +486,6 @@
     <section class="bg-black py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-900">
         <div class="max-w-5xl mx-auto space-y-6">
             
-            <!-- Section Title & Controls -->
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="text-center sm:text-left">
                     <h2 class="text-xl font-extrabold text-white flex items-center justify-center sm:justify-start gap-2">
@@ -539,7 +495,6 @@
                     <p class="text-xs text-gray-400 mt-1">洋楽のアカペラカバー</p>
                 </div>
 
-                <!-- Manual Slide Controls -->
                 <div class="flex items-center space-x-3">
                     <button onclick="ytPrevPlaylist()" class="w-10 h-10 rounded-full bg-gray-900 hover:bg-brand-red text-white flex items-center justify-center transition shadow-lg border border-gray-800">
                         <i class="fa-solid fa-chevron-left text-sm"></i>
@@ -554,36 +509,28 @@
                 </div>
             </div>
 
-            <!-- Carousel Wrapper -->
             <div class="relative overflow-hidden rounded-2xl bg-black border border-gray-800 shadow-2xl p-3 sm:p-4" onmouseenter="ytPauseSlideOnHover()" onmouseleave="ytResumeSlideOnLeave()">
                 <div id="ytPlaylistTrack" class="flex playlist-transition">
-                    <!-- YouTube Playlist 1 -->
                     <div class="w-full flex-shrink-0 px-1">
                         <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z2tHNoyrlwh_zJKixwtm8bM" width="100%" height="352" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
                     </div>
-                    <!-- YouTube Playlist 2 -->
                     <div class="w-full flex-shrink-0 px-1">
                         <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z20bTPhDlk-LEDZgTBbYCKG" width="100%" height="352" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
                     </div>
-                    <!-- YouTube Playlist 3 -->
                     <div class="w-full flex-shrink-0 px-1">
                         <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z3v1-Md3ohxfo7aFT-K7ZdL" width="100%" height="352" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
                     </div>
-                    <!-- YouTube Playlist 4 -->
                     <div class="w-full flex-shrink-0 px-1">
                         <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z2XFIGkRRw4ooJdrpjwrfWH" width="100%" height="352" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
                     </div>
-                    <!-- YouTube Playlist 5 -->
                     <div class="w-full flex-shrink-0 px-1">
                         <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z1YJjkKMQs5QpAbyE-uf8vK" width="100%" height="352" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
                     </div>
-                    <!-- YouTube Playlist 6 -->
                     <div class="w-full flex-shrink-0 px-1">
                         <iframe style="border-radius:12px" src="https://www.youtube.com/embed/videoseries?list=PLtNoF8CCU5z2UVK7cANQml6KB7_RMQ8Wy" width="100%" height="352" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
                     </div>
                 </div>
 
-                <!-- Slide Indicators (Dots) -->
                 <div class="flex justify-center space-x-2 mt-4" id="ytCarouselDots">
                     <button onclick="ytGoToPlaylist(0)" class="w-2.5 h-2.5 rounded-full bg-brand-red transition-all"></button>
                     <button onclick="ytGoToPlaylist(1)" class="w-2.5 h-2.5 rounded-full bg-gray-700 hover:bg-gray-500 transition-all"></button>
@@ -594,7 +541,6 @@
                 </div>
             </div>
 
-            <!-- YouTube Channel Link -->
             <div class="mt-3 text-center">
                 <a href="https://youtube.com/@ksvox" target="_blank" rel="noopener noreferrer" class="text-xs text-gray-400 hover:text-red-400 transition underline inline-flex items-center gap-1.5">
                     <i class="fa-brands fa-youtube text-red-500"></i>
@@ -757,63 +703,52 @@
             ytIsHoverPaused = false;
         }
 
-        // Dynamic Trending Songs Sample Generator via Gemini Search Grounding
+        // Dynamic Trending Songs Sample Generator via Vercel Serverless Endpoint
         async function fetchTrendingSamples() {
             const refreshIcon = document.getElementById('refreshIcon');
-            refreshIcon.classList.add('animate-spin');
-
-            const apiKey = ""; // Runtime provided key
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-            const systemPrompt = "あなたは最新の音楽トレンドに詳しい音楽アナリストです。現在世界的および日本でヒット・話題になっている人気の楽曲を合計4曲、必ず【洋楽3曲 : 邦楽1曲】の比率で選び、JSONで出力してください。";
-            const userPrompt = "現在よく検索されている世界・日本の最新ヒット曲を洋楽3曲、邦楽1曲の割合で取得してください。";
-
-            const payload = {
-                contents: [{ parts: [{ text: userPrompt }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-                tools: [{ "google_search": {} }],
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "ARRAY",
-                        items: {
-                            type: "OBJECT",
-                            properties: {
-                                artist: { type: "STRING" },
-                                song: { type: "STRING" }
-                            },
-                            required: ["artist", "song"]
-                        }
-                    }
-                }
-            };
+            if (refreshIcon) refreshIcon.classList.add('animate-spin');
 
             try {
-                const response = await fetch(apiUrl, {
+                // Check if running in blob preview environment
+                if (window.location.protocol.startsWith('blob') || window.location.origin === 'null') {
+                    throw new Error("Preview mode active");
+                }
+
+                const response = await fetch('/api/gemini', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({ type: 'trending' })
                 });
-                
+
                 if (response.ok) {
                     const result = await response.json();
                     const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
                     if (text) {
-                        const items = JSON.parse(text);
+                        const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
+                        const items = JSON.parse(cleanText);
                         if (Array.isArray(items) && items.length >= 4) {
                             renderSampleTags(items.slice(0, 4));
+                            return;
                         }
                     }
                 }
             } catch (err) {
-                console.warn("Trending fetch failed, keeping default samples:", err);
+                // Safe fallback for preview / standalone environment
+                const fallbackTrending = [
+                    { artist: "Lady Gaga & Bruno Mars", song: "Die With A Smile" },
+                    { artist: "Sabrina Carpenter", song: "Espresso" },
+                    { artist: "Billie Eilish", song: "BIRDS OF A FEATHER" },
+                    { artist: "Mrs. GREEN APPLE", song: "ライラック" }
+                ];
+                renderSampleTags(fallbackTrending);
             } finally {
-                refreshIcon.classList.remove('animate-spin');
+                if (refreshIcon) refreshIcon.classList.remove('animate-spin');
             }
         }
 
         function renderSampleTags(sampleList) {
             const container = document.getElementById('sampleTagsContainer');
+            if (!container) return;
             container.innerHTML = '';
             sampleList.forEach(item => {
                 const btn = document.createElement('button');
@@ -838,11 +773,14 @@
             document.getElementById('loadingState').classList.remove('hidden');
             document.getElementById('loadingTitle').innerText = `「${artist} - ${song}」を解析中...`;
 
+            // Brief delay for visual transition smoothness
+            await new Promise(r => setTimeout(r, 400));
+
             try {
                 const data = await fetchMusicInsights(artist, song);
                 renderResults(artist, song, data);
             } catch (error) {
-                console.error("API Call Error:", error);
+                // Fallback to intelligent client-side dynamic mock engine when backend is unavailable
                 const mockData = getMockData(artist, song);
                 renderResults(artist, song, mockData);
             } finally {
@@ -852,110 +790,33 @@
             }
         }
 
-        // Gemini API Prompt Request
+        // Gemini API Proxy Request to Vercel Serverless Function (/api/gemini)
         async function fetchMusicInsights(artist, song) {
-            const apiKey = "";
-            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            // Guard against URL parsing errors in blob/iframe preview environments
+            if (window.location.protocol.startsWith('blob') || window.location.origin === 'null') {
+                throw new Error("Preview environment (blob URL). Using local insights simulator.");
+            }
 
-            const systemPrompt = `あなたはプロの音楽評論家・ボイストレーナー・音楽データアナリストです。
-洋楽（英語圏含む世界の楽曲）および邦楽に対応し、英語の音楽データベースや海外記事からも幅広く最新かつ詳細な情報を収集し、【必ず自然で理解しやすい日本語】に翻訳して出力してください。
-
-【出力要件（すべて日本語で記載）】
-1. youtube: 
-   - videoId: 該当楽曲の公式MV(Official Music Video) > 公式オーディオ/リリックVideo > 本人ライブ動画の順で最も適したYouTubeの11桁の動画ID。
-   - type: "公式MV", "公式リリックMV", "公式ライブ", または "公式オーディオ"
-2. artist:
-   - origin: 出身地・活動拠点 (例: アメリカ・ロサンゼルス, イギリス・ロンドン, 東京都 など)
-   - age: 生年月日、年齢、または活動キャリア
-   - bio: 経歴・音楽的特徴のわかりやすい要約 (200文字程度の日本語)
-   - topSongs: 代表曲3〜4曲の配列
-3. song:
-   - release: リリース年・月 (例: 2010年8月)
-   - key: 楽曲のKey/調 (例: A Major, F# Minor)
-   - bpm: テンポ/BPM数値 (例: 120)
-   - features: ジャンル、コード感、トラック構造の特徴解説 (100〜150文字の日本語)
-   - vocalFeatures: 発声法(ミックスボイス/ベルティング/ファルセット)、息使い、リズム・ビート感、歌唱難易度や表現技法のアドバイス (120〜180文字の日本語)
-4. similarSongs: テンポ・曲調・ヴォーカルスタイル・世界観が近い3つの類似曲（洋楽・邦楽問わず選定）の配列
-   - artist: アーティスト名
-   - song: 曲名
-   - reason: 類似ポイントと歌唱面での共通点 (100文字程度の日本語)`;
-
-            const userPrompt = `アーティスト名: "${artist}"\n曲名: "${song}"`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userPrompt }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-                tools: [{ "google_search": {} }],
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "OBJECT",
-                        properties: {
-                            youtube: {
-                                type: "OBJECT",
-                                properties: {
-                                    videoId: { type: "STRING", nullable: true },
-                                    type: { type: "STRING" }
-                                },
-                                required: ["type"]
-                            },
-                            artist: {
-                                type: "OBJECT",
-                                properties: {
-                                    origin: { type: "STRING" },
-                                    age: { type: "STRING" },
-                                    bio: { type: "STRING" },
-                                    topSongs: { type: "ARRAY", items: { type: "STRING" } }
-                                },
-                                required: ["origin", "age", "bio", "topSongs"]
-                            },
-                            song: {
-                                type: "OBJECT",
-                                properties: {
-                                    release: { type: "STRING" },
-                                    key: { type: "STRING" },
-                                    bpm: { type: "STRING" },
-                                    features: { type: "STRING" },
-                                    vocalFeatures: { type: "STRING" }
-                                },
-                                required: ["release", "key", "bpm", "features", "vocalFeatures"]
-                            },
-                            similarSongs: {
-                                type: "ARRAY",
-                                items: {
-                                    type: "OBJECT",
-                                    properties: {
-                                        artist: { type: "STRING" },
-                                        song: { type: "STRING" },
-                                        reason: { type: "STRING" }
-                                    },
-                                    required: ["artist", "song", "reason"]
-                                }
-                            }
-                        },
-                        required: ["youtube", "artist", "song", "similarSongs"]
-                    }
-                }
-            };
-
-            const response = await fetch(endpoint, {
+            const response = await fetch('/api/gemini', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify({ type: 'search', artist, song })
             });
 
             if (!response.ok) {
-                throw new Error(`API response error: ${response.status}`);
+                const errJson = await response.json().catch(() => ({}));
+                throw new Error(errJson.error || `API response error: ${response.status}`);
             }
 
             const result = await response.json();
             const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
             if (!jsonText) throw new Error("Invalid API response format");
 
-            return JSON.parse(jsonText);
+            const cleanText = jsonText.replace(/```json/g, '').replace(/```/g, '').trim();
+            return JSON.parse(cleanText);
         }
 
-        // Render Function
+        // Render Results Function
         function renderResults(artist, song, data) {
             // 1. YouTube Section
             const videoContainer = document.getElementById('videoEmbedContainer');
@@ -966,13 +827,23 @@
             if (data.youtube && data.youtube.videoId) {
                 videoContainer.classList.remove('hidden');
                 noVideoBox.classList.add('hidden');
-                // Standard Embed with origin and fallback open button
                 videoContainer.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${data.youtube.videoId}?rel=0&enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
                 videoTypeBadge.innerText = data.youtube.type || '公式動画';
                 
                 videoExternalLink.innerHTML = `
                     <a href="https://www.youtube.com/watch?v=${data.youtube.videoId}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs text-brand-red hover:underline font-bold">
                         <span>YouTubeで直接開いて見る</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                `;
+            } else if (data.youtube && data.youtube.searchQuery) {
+                videoContainer.classList.remove('hidden');
+                noVideoBox.classList.add('hidden');
+                videoContainer.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed?listType=search&list=${data.youtube.searchQuery}" title="YouTube search player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+                videoTypeBadge.innerText = 'YouTube検索再生';
+                videoExternalLink.innerHTML = `
+                    <a href="https://www.youtube.com/results?search_query=${data.youtube.searchQuery}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs text-brand-red hover:underline font-bold">
+                        <span>YouTubeで検索結果を表示</span>
                         <i class="fa-solid fa-arrow-up-right-from-square"></i>
                     </a>
                 `;
@@ -1029,41 +900,56 @@
             });
         }
 
-        // Fallback Mock Data (Western Primary Example)
+        // Fallback Mock Engine for local preview / standalone usage
         function getMockData(artist, song) {
+            const query = `${artist} ${song}`.toLowerCase();
+            
+            // Map preset song video IDs
+            let videoId = null;
+            if (query.includes('bruno mars') && query.includes('just the way')) videoId = 'LjhCEhWiKXk';
+            else if (query.includes('taylor swift') && query.includes('cruel summer')) videoId = 'ic8j13piUrQ';
+            else if (query.includes('billie eilish') && query.includes('birds of a feather')) videoId = 'd5gf9dXb4ik';
+            else if (query.includes('official') || query.includes('subtitle')) videoId = 'hN5MBlGv2Ac';
+            else if (query.includes('vaundy') || query.includes('怪獣')) videoId = 'UM9XNpgrqBk';
+            else if (query.includes('sabrina') || query.includes('espresso')) videoId = 'eVli-tstM5E';
+            else if (query.includes('die with a smile')) videoId = 'kPa7bsKwL-c';
+
+            const isJapanese = /[一-龠ぁ-ゔァ-ヴー]/.test(artist + song) || query.includes('official') || query.includes('vaundy');
+
             return {
                 youtube: {
-                    videoId: "fJ9rUzIMcZQ",
-                    type: "公式MV"
+                    videoId: videoId,
+                    searchQuery: encodeURIComponent(`${artist} ${song}`),
+                    type: videoId ? "公式MV" : "検索プレイヤー"
                 },
                 artist: {
-                    origin: "アメリカ・ハワイ州ホノルル",
-                    age: "1985年10月8日生まれ",
-                    bio: `${artist}はレトロなR&B、ソウル、ポップスを現代的に昇華させたグラミー賞受賞の偉大なポップスター。伸びやかなハイトーンボイスと卓越したエンターテインメント性で世界的な人気を誇る。`,
-                    topSongs: [song, "Uptown Funk", "24K Magic", "Grenade"]
+                    origin: isJapanese ? "日本" : "アメリカ / イギリス",
+                    age: "人気トップアーティスト",
+                    bio: `${artist}は唯一無二の音楽性と表現力で幅広い支持を集めるアーティスト。「${song}」をはじめ、親しみやすさと音楽的技巧を兼ね備えた話題曲を世界中で展開しています。`,
+                    topSongs: [song, "代表ヒット曲 01", "代表ヒット曲 02"]
                 },
                 song: {
-                    release: "2010年7月",
-                    key: "F Major",
-                    bpm: "109",
-                    features: "王道のメロディアスなポップ・バラード構造。オーソドックスながら高音域のストレートなメロディラインと厚みのあるバックトラックが特徴。",
-                    vocalFeatures: "澄んだ地声の高音（チェスト・ミックス）を多用し、ストレートな発声とビブラートの使い分けが重要。サビでの開放感ある伸びやかな息のコントロールがポイント。"
+                    release: "ヒットチャートナンバー",
+                    key: "C Major / A Minor (標準)",
+                    bpm: "116 - 128 (ミディアムテンポ)",
+                    features: `「${song}」はキャッチーなサビとドラマチックなメロディラインが非常に魅力的な作品です。洗練されたアレンジメントがボーカルの存在感を惹き立てています。`,
+                    vocalFeatures: "ブレのないピッチ感とスムーズな裏声/表声の切り替えがポイント。語りかけるようなAメロからサビへの感情の開放を意識すると豊かに歌いこなせます。"
                 },
                 similarSongs: [
                     {
-                        artist: "Ed Sheeran",
-                        song: "Thinking Out Loud",
-                        reason: "ロマンチックな歌詞の世界観と、ソウルフルかつ伸びやかなメロディラインが共通。"
+                        artist: isJapanese ? "Official髭男dism" : "Bruno Mars",
+                        song: isJapanese ? "Pretender" : "Leave the Door Open",
+                        reason: "グルーヴ感あふれるコード進行と、キャッチーで伸びやかなヴォーカルラインの構造が類似しているため。"
                     },
                     {
-                        artist: "Justin Bieber",
-                        song: "Love Yourself",
-                        reason: "アコースティックで歌声の表現力が前面に出るメロディ構造とヴォーカルコントロールが酷似。"
+                        artist: isJapanese ? "Mrs. GREEN APPLE" : "Taylor Swift",
+                        song: isJapanese ? "ダンスホール" : "Anti-Hero",
+                        reason: "親しみやすいポップ感と現代的なサウンドメイク、歌唱時の発声アプローチに高い親和性があります。"
                     },
                     {
-                        artist: "Vaundy",
-                        song: "踊り子",
-                        reason: "ポップスとしてのキャッチーさと心地よいミディアムテンポのビート感が共通。"
+                        artist: isJapanese ? "Vaundy" : "Ed Sheeran",
+                        song: isJapanese ? "踊り子" : "Shape of You",
+                        reason: "印象的なリズムループとメロディのフック（引っ掛かり）が効いており、ボイストレーニングの題材としてもお勧めです。"
                     }
                 ]
             };
