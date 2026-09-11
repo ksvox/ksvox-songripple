@@ -12,8 +12,8 @@ export default async function handler(req, res) {
 
   const { type, artist, song } = req.body || {};
   
-  // 優先試行するGeminiモデルのリスト（無料枠優先のため gemini-3.5-flash を最優先に設定）
-  const candidateModels = ['gemini-3.5-flash', 'gemini-3.6-flash', 'gemini-3.5-flash-lite'];
+  // 優先試行するGeminiモデルのリスト（新形式APIキーは2.5系以下が利用不可のため3.x系のみ。無料枠が比較的手厚いflash-liteを最優先）
+  const candidateModels = ['gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-3.6-flash'];
 
   try {
     let payload;
@@ -65,17 +65,17 @@ export default async function handler(req, res) {
     {
       "artist": "実在する類似アーティスト1",
       "song": "実在する類似楽曲1",
-      "reason": "音楽的構造やボーカル表現の共通点 (100文字程度)"
+      "reason": "音楽的構造やボーカル表現の共通点 (80文字程度)"
     },
     {
       "artist": "実在する類似アーティスト2",
       "song": "実在する類似楽曲2",
-      "reason": "音楽的構造やボーカル表現の共通点 (100文字程度)"
+      "reason": "音楽的構造やボーカル表現の共通点 (80文字程度)"
     },
     {
       "artist": "実在する類似アーティスト3",
       "song": "実在する類似楽曲3",
-      "reason": "音楽的構造やボーカル表現の共通点 (100文字程度)"
+      "reason": "音楽的構造やボーカル表現の共通点 (80文字程度)"
     }
   ]
 }`;
