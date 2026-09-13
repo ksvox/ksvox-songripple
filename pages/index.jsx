@@ -33,7 +33,7 @@ export default function SongRippleApp() {
     
     // Preset Tag Sample List State
     const [sampleTags, setSampleTags] = useState([
-        { artist: 'Bruno Mars', song: 'Just the Way You Are' },
+        { artist: 'Justin Bieber', song: 'Ghost' },
         { artist: 'Taylor Swift', song: 'Cruel Summer' },
         { artist: 'Billie Eilish', song: 'BIRDS OF A FEATHER' },
         { artist: 'Official髭男dism', song: 'Subtitle' }
@@ -649,7 +649,7 @@ export default function SongRippleApp() {
 
                             {/* Accuracy Disclaimer */}
                             <p className="text-[11px] text-gray-400 text-center sm:text-right leading-relaxed">
-                                <i className="fa-solid fa-circle-info mr-1"></i>Key・BPM等の情報はAIによる自動解析のため、レッスンでは参考値としてご確認ください。
+                                <i className="fa-solid fa-circle-info mr-1"></i>Key・BPM等の情報はAIによる自動解析のため、間違いがあることを予めご了承ください。
                             </p>
 
                             {/* Export / Download Toolbar */}
