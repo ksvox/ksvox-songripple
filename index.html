@@ -288,15 +288,6 @@
             <!-- Results View Area -->
             <div id="resultsArea" class="hidden space-y-8">
 
-                <!-- Download Toolbar -->
-                <div class="flex items-center justify-end">
-                    <button onclick="downloadResultsAsText()"
-                        class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-white bg-gray-800 hover:bg-gray-700 px-4 py-2.5 rounded-xl transition border border-gray-700 shadow">
-                        <i class="fa-solid fa-file-arrow-down"></i>
-                        <span>この結果をテキストで保存</span>
-                    </button>
-                </div>
-
                 <!-- 1. Video Player Section (Vimeo Prioritized / YouTube Fallback) -->
                 <section class="bg-white rounded-2xl p-6 border border-gray-200 shadow-md">
                     <div class="flex items-center justify-between mb-4 border-b border-gray-100 pb-3">
@@ -328,7 +319,8 @@
                     <!-- Artist Information Card -->
                     <section class="bg-white rounded-2xl p-6 border border-gray-200 shadow-md space-y-5">
                         <div class="flex items-center space-x-3 border-b border-gray-100 pb-3">
-                            <div class="w-14 h-14 rounded-xl bg-slate-100 border border-slate-200 flex-shrink-0 overflow-hidden flex items-center justify-center">
+                            <div class="w-14 h-14 rounded-xl bg-slate-100 border border-slate-200 flex-shrink-0 overflow-hidden flex items-center justify-center cursor-pointer active:opacity-70 transition"
+                                 onclick="openPhotoModal()" title="タップして拡大表示">
                                 <img id="resArtistPhoto" src="" alt="アーティスト写真"
                                      class="w-full h-full object-contain"
                                      onerror="this.onerror=null; this.src=DUMMY_ARTIST_PHOTO;">
@@ -428,6 +420,15 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="similarSongsGrid">
                     </div>
                 </section>
+
+                <!-- Download Toolbar -->
+                <div class="flex items-center justify-center sm:justify-end">
+                    <button onclick="downloadResultsAsText()"
+                        class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-white bg-gray-800 hover:bg-gray-700 px-4 py-2.5 rounded-xl transition border border-gray-700 shadow">
+                        <i class="fa-solid fa-file-arrow-down"></i>
+                        <span>この結果をテキストで保存</span>
+                    </button>
+                </div>
             </div>
         </div>
     </main>
@@ -1079,6 +1080,17 @@
             });
         }
 
+        // Artist Photo Modal (enlarge on tap)
+        function openPhotoModal() {
+            const thumb = document.getElementById('resArtistPhoto');
+            if (!thumb.src) return;
+            document.getElementById('photoModalImg').src = thumb.src;
+            document.getElementById('photoModal').classList.remove('hidden');
+        }
+        function closePhotoModal() {
+            document.getElementById('photoModal').classList.add('hidden');
+        }
+
         // Download currently displayed search result as a plain .txt file
         function downloadResultsAsText() {
             if (!lastResultData) return;
@@ -1178,5 +1190,16 @@
             };
         }
     </script>
+    <!-- Artist Photo Modal (tap thumbnail to enlarge) -->
+    <div id="photoModal" class="hidden fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-6" onclick="closePhotoModal()">
+        <div class="relative w-full max-w-sm" onclick="event.stopPropagation()">
+            <button onclick="closePhotoModal()" class="absolute -top-11 right-0 text-white text-2xl w-9 h-9 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img id="photoModalImg" src="" alt="アーティスト写真（拡大）"
+                 class="w-full max-h-[75vh] object-contain rounded-2xl shadow-2xl bg-slate-900 border border-gray-700">
+        </div>
+    </div>
+
 </body>
 </html>
