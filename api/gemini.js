@@ -31,6 +31,12 @@ export default async function handler(req, res) {
       const systemPrompt = `プロの音楽アナリスト・ボイストレーナーとして動作してください。
 指定されたアーティスト「${artist}」と楽曲「${song}」について、Google検索で最新の実在データを調査・分析し、必ず正確な事実のみに基づいて回答してください。
 
+【アーティスト写真の検索指示(重要・厳守)】
+1. 「${artist}」の写真は、著作権上安全な **Wikipedia または Wikimedia Commons (upload.wikimedia.org) に実際に掲載されている画像のURLのみ** を検索して特定してください。
+2. それ以外のサイト(ニュースサイト、SNS、ファンサイト、画像検索結果一般など)の画像URLは絶対に使用しないでください。
+3. Wikipedia/Wikimedia Commonsに適切な画像が見当たらない場合は、無理に他から探さず、必ず imageUrl: null としてください（これは正常な結果として扱ってください）。
+4. 画像が見つかった場合、source には "Wikipedia" と設定してください。
+
 【動画情報の最優先検索指示】
 1. 動画（video）については、まず第一優先として **Vimeo (vimeo.com)** から「${artist} ${song}」の公式MV、公式ライブ、または高品位パフォーマンス動画のID（英数字・数字ID）を検索して特定してください。
 2. Vimeoで該当動画が見つかった場合は、platform を "vimeo" とし、videoId にVimeoのIDを設定してください。
@@ -47,6 +53,10 @@ export default async function handler(req, res) {
     "platform": "vimeo または youtube または null",
     "videoId": "VimeoのID または 11桁のYouTube ID または null",
     "type": "公式MV または 公式オーディオ または パフォーマンス"
+  },
+  "photo": {
+    "imageUrl": "Wikipedia/Wikimedia Commonsに実在する画像URL、見つからない場合は null",
+    "source": "見つかった場合は Wikipedia、見つからない場合は null"
   },
   "artist": {
     "origin": "実在する出身地・活動拠点",
