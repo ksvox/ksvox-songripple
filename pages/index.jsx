@@ -647,6 +647,11 @@ export default function SongRippleApp() {
                                 </div>
                             </section>
 
+                            {/* Accuracy Disclaimer */}
+                            <p className="text-[11px] text-gray-400 text-center sm:text-right leading-relaxed">
+                                <i className="fa-solid fa-circle-info mr-1"></i>Key・BPM等の情報はAIによる自動解析のため、レッスンでは参考値としてご確認ください。
+                            </p>
+
                             {/* Export / Download Toolbar */}
                             <div className="flex items-center justify-center sm:justify-end">
                                 <button 
