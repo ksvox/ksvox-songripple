@@ -288,6 +288,15 @@
             <!-- Results View Area -->
             <div id="resultsArea" class="hidden space-y-8">
 
+                <!-- Download Toolbar -->
+                <div class="flex items-center justify-end">
+                    <button onclick="downloadResultsAsText()"
+                        class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-white bg-gray-800 hover:bg-gray-700 px-4 py-2.5 rounded-xl transition border border-gray-700 shadow">
+                        <i class="fa-solid fa-file-arrow-down"></i>
+                        <span>この結果をテキストで保存</span>
+                    </button>
+                </div>
+
                 <!-- 1. Video Player Section (Vimeo Prioritized / YouTube Fallback) -->
                 <section class="bg-white rounded-2xl p-6 border border-gray-200 shadow-md">
                     <div class="flex items-center justify-between mb-4 border-b border-gray-100 pb-3">
@@ -319,12 +328,14 @@
                     <!-- Artist Information Card -->
                     <section class="bg-white rounded-2xl p-6 border border-gray-200 shadow-md space-y-5">
                         <div class="flex items-center space-x-3 border-b border-gray-100 pb-3">
-                            <div class="w-10 h-10 rounded-xl bg-red-100 text-brand-red flex items-center justify-center font-bold">
-                                <i class="fa-solid fa-user-astronaut"></i>
+                            <div class="w-14 h-14 rounded-xl bg-slate-100 border border-slate-200 flex-shrink-0 overflow-hidden flex items-center justify-center">
+                                <img id="resArtistPhoto" src="" alt="アーティスト写真"
+                                     class="w-full h-full object-contain"
+                                     onerror="this.onerror=null; this.src=DUMMY_ARTIST_PHOTO;">
                             </div>
                             <div>
                                 <h2 class="text-lg font-bold text-brand-textDark" id="resArtistName">アーティスト名</h2>
-                                <p class="text-xs text-gray-500">Artist Profile</p>
+                                <p class="text-xs text-gray-500" id="resPhotoCredit">Artist Profile</p>
                             </div>
                         </div>
 
@@ -619,6 +630,19 @@
     </footer>
 
     <script>
+        // Fallback silhouette image (used when no artist photo is found, or the found photo fails to load)
+        const DUMMY_ARTIST_PHOTO = "data:image/svg+xml;utf8," + encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <rect width="100" height="100" fill="#E2E8F0"/>
+                <circle cx="50" cy="38" r="18" fill="#94A3B8"/>
+                <path d="M18 92 C18 66 34 56 50 56 C66 56 82 66 82 92 Z" fill="#94A3B8"/>
+            </svg>
+        `);
+
+        // Holds the most recently rendered search result, used for the "テキストで保存" download feature
+        let lastResultData = null;
+        let lastSearchQuery = { artist: '', song: '' };
+
         // Global state variables
         let currentPlaylistIndex = 0;
         const totalPlaylists = 5;
@@ -940,6 +964,22 @@
 
         // Render Results Function
         function renderResults(artist, song, data) {
+            // Store for the "テキストで保存" download feature
+            lastResultData = data;
+            lastSearchQuery = { artist, song };
+
+            // 0. Artist Photo Handling (Wikipedia/Wikimedia Commons only; falls back to a silhouette image)
+            const photoImg = document.getElementById('resArtistPhoto');
+            const photoCredit = document.getElementById('resPhotoCredit');
+            const photoUrl = data.photo?.imageUrl;
+            if (photoUrl) {
+                photoImg.src = photoUrl;
+                photoCredit.innerText = 'Artist Profile' + (data.photo?.source ? `（写真: ${data.photo.source}）` : '');
+            } else {
+                photoImg.src = DUMMY_ARTIST_PHOTO;
+                photoCredit.innerText = 'Artist Profile';
+            }
+
             // 1. Video Player Section Handling (Vimeo prioritized, YouTube fallback)
             const videoContainer = document.getElementById('videoEmbedContainer');
             const noVideoBox = document.getElementById('noVideoBox');
@@ -1037,6 +1077,51 @@
                 `;
                 similarGrid.appendChild(card);
             });
+        }
+
+        // Download currently displayed search result as a plain .txt file
+        function downloadResultsAsText() {
+            if (!lastResultData) return;
+            const data = lastResultData;
+            const { artist, song } = lastSearchQuery;
+
+            const lines = [];
+            lines.push(`■ ${artist} － ${song}`);
+            lines.push(`（Song Ripple で検索した情報）`);
+            lines.push('');
+            lines.push('【アーティスト情報】');
+            lines.push(`出身地・活動拠点: ${data.artist?.origin || '情報なし'}`);
+            lines.push(`年齢 / キャリア: ${data.artist?.age || '情報なし'}`);
+            lines.push(`経歴・バイオグラフィー: ${data.artist?.bio || '情報なし'}`);
+            lines.push(`代表曲: ${(data.artist?.topSongs || []).join(' / ') || '情報なし'}`);
+            lines.push('');
+            lines.push('【楽曲情報・解析】');
+            lines.push(`Key（調）: ${data.song?.key || '不明'}`);
+            lines.push(`BPM（テンポ）: ${data.song?.bpm || '不明'}`);
+            lines.push(`リリース: ${data.song?.release || '不明'}`);
+            lines.push(`ジャンル・サウンドの特徴: ${data.song?.features || '情報なし'}`);
+            lines.push(`歌唱の特徴・発声アドバイス: ${data.song?.vocalFeatures || '情報なし'}`);
+            lines.push('');
+            lines.push('【感性・構造が近い類似曲】');
+            (data.similarSongs || []).forEach((sim, i) => {
+                lines.push(`${i + 1}. ${sim.artist} - ${sim.song}`);
+                lines.push(`   理由: ${sim.reason}`);
+            });
+
+            const text = lines.join('\n');
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+
+            // Sanitize filename (remove characters not allowed in filenames)
+            const safeName = `${artist}_${song}`.replace(/[\\/:*?"<>|]/g, '_');
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${safeName}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
 
         // Mock Engine Fallback for Preview Modes
