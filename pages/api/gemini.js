@@ -1,6 +1,12 @@
+import { hasPass } from '../../lib/ksGate';
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  // 門弟アプリ経由で開いた人だけ利用できる
+  if (!hasPass(req)) {
+    return res.status(403).json({ error: '利用時間が切れました。門弟アプリからもう一度開いてください。' });
   }
 
   const apiKey = process.env.GEMINI_API_KEY;

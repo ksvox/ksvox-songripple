@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import KsBlocked from '../components/KsBlocked';
+import { gateProps } from '../lib/ksGate';
 
 // Fallback silhouette image SVG encoded as data URL
 const DUMMY_ARTIST_PHOTO = "data:image/svg+xml;utf8," + encodeURIComponent(`
@@ -21,7 +23,7 @@ const INITIAL_YT_PLAYLISTS = [
     { id: "PLtNoF8CCU5z2UVK7cANQml6KB7_RMQ8Wy", fallback: "PURE VOX - Live & Special Performance", title: "読み込み中..." }
 ];
 
-export default function SongRippleApp() {
+function SongRippleApp() {
     // Form Inputs & Search States
     const [artist, setArtist] = useState('');
     const [song, setSong] = useState('');
@@ -882,4 +884,14 @@ export default function SongRippleApp() {
             )}
         </div>
     );
+}
+
+// ---- 門弟アプリ経由のみで開けるようにする入口 ----
+export async function getServerSideProps(ctx) {
+  return gateProps(ctx);
+}
+
+export default function Page({ ksAllowed }) {
+  if (!ksAllowed) return <KsBlocked appName="Song Ripple" />;
+  return <SongRippleApp />;
 }
